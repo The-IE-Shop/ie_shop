@@ -42,7 +42,7 @@ export async function sendContactEmail(prevState: any, formData: FormData) {
      
     await resend.emails.send({
       from: "Contact Form <contact@mail.theie.shop>",
-      to: "dadigwu@gmail.com",
+      to: "info@theie.shop",
       replyTo: email,
       subject: `New E-Commerce Message ${firstName} ${lastName}`,
       text: `Sender: ${firstName} ${lastName} (${email}) \n\nMessage:\n${message}`,
