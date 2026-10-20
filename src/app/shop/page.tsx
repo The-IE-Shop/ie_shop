@@ -45,7 +45,7 @@ export default async function ShopPage() {
         >
           {
             isPreOrderProduct && (
-              <div style={{ position: 'absolute', top: '8px', left: '8px', backgroundColor: '#d97706', color: '#fff', padding: '4px 8px', fontSize: '11px', fontWeight: 'bold', zIndex: 10, borderRadius: '4px' }}>
+              <div style={{ position: 'absolute', top: '8px', left: '8px', backgroundColor: '#d97706', color: '#fff', padding: '4px 8px', fontSize: '11px', fontWeight: 'bold', zIndex: 9, borderRadius: '4px' }}>
                 Pre-Order
               </div>
             )
