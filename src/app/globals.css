@@ -806,13 +806,15 @@ main.main-hero-content {
   padding: 1rem;
   border-radius: 4px;
   width: 100%;
+  height: fit-content;
 }
 
 .payment-choice {
   display: flex;
-  flex-wrap: wrap;
   gap: .5rem;
+  height: fit-content;
 }
+
 .payment-choice > input {
   height: 1rem;
   width: 5%;

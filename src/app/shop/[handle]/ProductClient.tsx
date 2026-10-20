@@ -192,11 +192,11 @@ export default function ProductClient({ product }: ShopifyProductType) {
 
               {sellingPlans.map((sellingPlan) => {
                 const plan = sellingPlan.sellingPlan;
-
+                const depositPrice = sellingPlan?.checkoutChargeAmount?.amount;
+                const discountPrice = sellingPlan?.priceAdjustments?.[0]?.price?.amount;
+                
                 const planPrice = 
-                  sellingPlan.checkoutChargeAmount?.amount||
-                  sellingPlan.priceAdjustments?.[0]?.price ||
-                  standardPrice.amount || "0";
+                  depositPrice || discountPrice || standardPrice.amount || "0";
                   
                 return(
                   <label 
@@ -211,8 +211,33 @@ export default function ProductClient({ product }: ShopifyProductType) {
                       checked={selectedSellingPlanId === plan.id}
                       onChange={() => setSelectedSellingPlanId(plan.id)}
                     />
-                    <span>{plan.name} — {formatPrice(Number(planPrice), standardPrice.currencyCode)}</span>
-                      {plan.description && <p style={{ margin: 0, fontSize: "0.8rem", opacity: 0.7 }}>{plan.description}</p>}
+
+                    
+                    <div className="payment-choice-info-container">
+                      {/* Plan name, price, and (if necessary) discounted price */}
+                      <span style={{ display: "flex", gap: ".25rem", fontWeight: "bold", fontSize: "0.875rem" }}>
+                        {`${plan.name}:`}
+                        {discountPrice && 
+                          <span style={{ textDecoration: "line-through", opacity: ".5", fontWeight: "normal" }}>
+                          {formatPrice(Number(standardPrice?.amount), standardPrice.currencyCode)}</span>
+                        } 
+                        <span>{formatPrice(Number(planPrice), standardPrice.currencyCode)}</span>
+                      </span>
+
+                      {/* Discount percent */}
+                      {discountPrice && 
+                        <span style={{ height: "1rem", fontSize: ".75rem", fontWeight: "bold", color: "#d97706"}}>
+                          {`Save ${Number(standardPrice?.amount) / (Number(standardPrice?.amount) - Number(discountPrice))}%`}
+                        </span>
+                      }
+
+                      {/* Plan description */}
+                      {plan.description && 
+                        <p style={{ margin: 0, fontSize: ".75rem", opacity: 0.7 }}>
+                          {plan.description}
+                        </p>
+                      }
+                    </div>
                   </label>
                 )
               })}
