@@ -1541,6 +1541,10 @@ footer p {
   max-width: 300px;
 }
 
+.desktop-about-title {
+  display: none;
+}
+
 .about-us {
   display: flex;
   flex-direction: column;
@@ -1583,10 +1587,6 @@ footer p {
   #about-us-section > h2 {
     font-size: 1.875rem;
     max-width: none;
-  }
-
-  .desktop-about-title {
-    display: none;
   }
 
   .about-us, .trademark-info {
