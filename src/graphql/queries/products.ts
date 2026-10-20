@@ -44,6 +44,16 @@ export const GET_PRODUCT_QUERY = `
             }
             sellingPlanAllocations(first: 5) {
               nodes {
+                checkoutChargeAmount {
+                  amount
+                  currencyCode
+                }
+                priceAdjustments {
+                  price {
+                    amount
+                    currencyCode
+                  }
+                }
                 sellingPlan {
                   id
                   name

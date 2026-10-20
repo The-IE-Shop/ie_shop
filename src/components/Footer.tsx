@@ -12,7 +12,6 @@ type FooterProps = {
 export default async function Footer(): Promise<React.JSX.Element> { 
   const shopData = await getShopLayoutData();
 
-  console.log(shopData);
   return(
     <footer>
       <div id="footer-wrapper" className="wrapper">
@@ -28,32 +27,38 @@ export default async function Footer(): Promise<React.JSX.Element> {
         
         <div className="policy-links-container">
           <Link
+            href="/about-us"
+            className="policy-links"
+          >
+            About Us
+          </Link>
+          {shopData?.privacyPolicy && <Link
             className='policy-links' 
             href="/policies/privacy-policy"
             >
             Privacy Policy
-          </Link>
+          </Link>}
 
-          <Link
+          {shopData?.termsOfService && <Link
             className='policy-links' 
             href="/policies/terms-of-service"
             >
             Terms of Service
-          </Link>
+          </Link>}
 
-          <Link
+          {shopData?.refundPolicy && <Link
             className='policy-links' 
             href="/policies/refund-policy"
             >
             Refund Policy
-          </Link>
+          </Link>}
 
-          <Link
+          {shopData?.shippingPolicy && <Link
             className='policy-links' 
             href="/policies/shipping-policy"
             >
             Shippping Policy
-          </Link>
+          </Link>}
         </div>
         <div className="footer-info">
           <p>© 2026 IE Shop.</p>

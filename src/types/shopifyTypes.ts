@@ -25,6 +25,16 @@ export type ShopifyVariantType = {
   } | null;
   sellingPlanAllocations?: {
    nodes: Array<{
+    checkoutChargeAmount: {
+      amount: string;
+      currencyCode: string;
+    }
+    priceAdjustments: Array<{
+      price: {
+        amount: string;
+        currencyCode: string;
+      }
+    }>;
     sellingPlan: {
       id: string;
       name: string;

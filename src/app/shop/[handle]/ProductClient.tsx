@@ -1,10 +1,10 @@
 "use client";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, act } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import { HiArrowLongLeft } from "react-icons/hi2";
-import { ShopifyProductType } from "@/types/shopifyTypes";
+import { ShopifyProductType, ShopifyVariantType } from "@/types/shopifyTypes";
 import { notFound } from "next/navigation";
 import { useCart } from "@/components/CartContext";
 import AddToCartButton from "@/components/AddToCartButton";
@@ -30,11 +30,20 @@ type ProductVariantType = {
     sellingPlanAllocations?: {
       nodes:
         Array<{
+          checkoutChargeAmount: {
+            amount: string;
+            currencyCode: string;
+          } | null;
+          priceAdjustments: Array<{
+            price: {
+              amount: string;
+              currencyCode: string;
+            }
+          }>;
           sellingPlan: {
             id: string;
             name: string;
             description: string | null;
-
           }
         }>
     }
@@ -49,6 +58,7 @@ export default function ProductClient({ product }: ShopifyProductType) {
   const [imageIndex, setImageIndex] = useState<number>(0);
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [isTabOpen, setIsTabOpen] = useState<boolean>(true);
+  const [selectedSellingPlanId, setSelectedSellingPlanId] = useState<string | null>(null);
   
   const title = product.title;
   const description = product.descriptionHtml;
@@ -57,16 +67,12 @@ export default function ProductClient({ product }: ShopifyProductType) {
   const hasMultipleSizes = product.options[0]?.values && product.options[0].values.length > 0;
   
   const currentActiveVariant = variantList.find((edge) => edge.node.title === selectedSize) || variantList[0];
-  const price = currentActiveVariant?.node?.price;
   const isSizeSelected = hasMultipleSizes ? selectedSize !== "" : true;
-
+  
   const isOutOfStock = isSizeSelected && currentActiveVariant 
     ? !currentActiveVariant.node.availableForSale || (currentActiveVariant.node.quantityAvailable !== undefined && currentActiveVariant.node.quantityAvailable <= 0) 
     : false;
-  
-  const k1PreOrderPlanId = currentActiveVariant?.node?.sellingPlanAllocations?.nodes?.[0]?.sellingPlan?.id;
-  const preOrderDescription = currentActiveVariant?.node?.sellingPlanAllocations?.nodes?.[0]?.sellingPlan?.description;
-  
+    
   // Create options for select size dropdown
   const selectSizes = variantList.map((variant: ProductVariantType, index: number) => {
     const option = variant?.node?.title;
@@ -96,6 +102,32 @@ export default function ProductClient({ product }: ShopifyProductType) {
     )
   });
 
+  const standardPrice = currentActiveVariant?.node?.price;
+  const sellingPlans = currentActiveVariant?.node?.sellingPlanAllocations?.nodes || [];
+  const activeSellingPlans = sellingPlans.find((a) => a.sellingPlan.id === selectedSellingPlanId);
+
+  let displayPriceAmount = standardPrice?.amount || "0";
+
+  if (activeSellingPlans) {
+    displayPriceAmount = 
+      activeSellingPlans?.priceAdjustments?.[0]?.price?.amount ||
+      standardPrice?.amount || "0";
+  };
+
+  useEffect(() => {
+    if(isOutOfStock && sellingPlans.length > 0) {
+      const planExists = sellingPlans.some((a) => a.sellingPlan.id === selectedSellingPlanId);
+
+      if(!planExists) {
+        setSelectedSellingPlanId(null);
+      };
+    } else {
+      setSelectedSellingPlanId(null);
+    }
+
+  }, [sellingPlans, selectedSellingPlanId, isOutOfStock]);
+
+  
   return(
     <main id="main-product-content">
       <Link
@@ -107,14 +139,14 @@ export default function ProductClient({ product }: ShopifyProductType) {
       </Link>
 
       <div className="product-container">
-          <section className="product-info">
-            <div className="product-title">
-              <p>{title}</p>
-            </div>
-            <div className="product-price">
-              <p className="price-amount">{formatPrice(price.amount, price.currencyCode)}</p>
-            </div>
-          </section>
+        <section className="product-info">
+          <div className="product-title">
+            <p>{title}</p>
+          </div>
+          <div className="product-price">
+            <p className="price-amount">{standardPrice ? formatPrice(Number(displayPriceAmount), standardPrice.currencyCode) : "$0.00"}</p>
+          </div>
+        </section>
         <div className="product-content-card-container">
           <div className="product-image-container">
             <Image 
@@ -151,33 +183,68 @@ export default function ProductClient({ product }: ShopifyProductType) {
             </select>
             <IoMdArrowDropdown className="drop-arrow"/>
           </div>}
+
+          {isOutOfStock && isSizeSelected && standardPrice && sellingPlans.length > 0 && (
+            <div className="payment-options-selector">
+              <p style={{ fontWeight: "600", fontSize: "0.9rem", textTransform: "uppercase" }}>
+                Select Purchase Options:
+              </p>
+
+              {sellingPlans.map((sellingPlan) => {
+                const plan = sellingPlan.sellingPlan;
+
+                const planPrice = 
+                  sellingPlan.checkoutChargeAmount?.amount||
+                  sellingPlan.priceAdjustments?.[0]?.price ||
+                  standardPrice.amount || "0";
+                  
+                return(
+                  <label 
+                    htmlFor="" 
+                    key={plan.id} 
+                    className="payment-choice"
+                  >
+                    <input 
+                      type="radio"
+                      name="payment-choice"
+                      value={plan.id}
+                      checked={selectedSellingPlanId === plan.id}
+                      onChange={() => setSelectedSellingPlanId(plan.id)}
+                    />
+                    <span>{plan.name} — {formatPrice(Number(planPrice), standardPrice.currencyCode)}</span>
+                      {plan.description && <p style={{ margin: 0, fontSize: "0.8rem", opacity: 0.7 }}>{plan.description}</p>}
+                  </label>
+                )
+              })}
+            </div>
+          )}
+          
+          {isOutOfStock && selectedSellingPlanId && (
+            <p className="preorder-message">
+              ✦ {activeSellingPlans?.sellingPlan?.description || "Item available via pre-order."}
+            </p>
+          )}
           
           <AddToCartButton 
             variantId={isSizeSelected ? currentActiveVariant?.node?.id : undefined}
-            disabled={(hasMultipleSizes && !selectedSize) || (isOutOfStock && !k1PreOrderPlanId)}
-            sellingPlanId={isOutOfStock ? k1PreOrderPlanId : undefined}
+            disabled={(hasMultipleSizes && !selectedSize) || (isOutOfStock && !selectedSellingPlanId)}
+            sellingPlanId={selectedSellingPlanId || undefined}
           />
 
-          {
-            isOutOfStock && k1PreOrderPlanId && (
-              <p className="preorder-message">
-                ✦ {preOrderDescription || "Item available via pre-order."}
-              </p>
-            )
-          }
-        </div>
-        <div className="product-description-container">
-          <div 
-            className="product-description-title"
-            onClick={() => setIsTabOpen((prev) => !prev)}
-          >
-            <h3 className="product-description-header">Description</h3>
-            {isTabOpen ? <IoMdArrowDropup className="accordian-drop-arrow"/> : <IoMdArrowDropdown className="accordian-drop-arrow"/>}
-          </div>
-          <div 
-            className={`product-description ${!isTabOpen && "close"}`}
-            dangerouslySetInnerHTML={{__html: description}}
-          >
+          
+          <div className="product-description-container">
+            <div 
+              className="product-description-title"
+              onClick={() => setIsTabOpen((prev) => !prev)}
+            >
+              <h3 className="product-description-header">Description</h3>
+              {isTabOpen ? <IoMdArrowDropup className="accordian-drop-arrow"/> : <IoMdArrowDropdown className="accordian-drop-arrow"/>}
+            </div>
+            <div 
+              className={`product-description ${!isTabOpen && "close"}`}
+              dangerouslySetInnerHTML={{__html: description}}
+            >
+            </div>
           </div>
         </div>
       </div>

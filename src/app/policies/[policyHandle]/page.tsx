@@ -20,14 +20,14 @@ export default async function PrivacyPolicy({ params }: Props): Promise<React.JS
 
   const selectedPolicyKey = policyMap[policyHandle];
   const policy = selectedPolicyKey && shopData ? shopData[selectedPolicyKey] : null;
-  console.log(policy)
+  
 
   if(!policy || !policy.body) {
     notFound();
   };
 
   return(
-    <div className="privacy-policy-container">
+    <div className="policy-container">
       <h1 className="policy-pages-header">
         {shopData?.privacyPolicy?.title}
       </h1>
