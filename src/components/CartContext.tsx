@@ -41,6 +41,12 @@ export default function CartContextProvider({ children }: {children: ReactNode})
           setCartData(data);
         } catch(err) {
           console.error("Failed loading initial cart data:", err);
+
+          if((err as any)?.status === 404) {
+            localStorage.removeItem("cart_id");
+            setCartId(null);
+            setCartData(null);
+          }
         }
       };
       fetchInitialCartData();
@@ -56,12 +62,10 @@ export default function CartContextProvider({ children }: {children: ReactNode})
 
       if(!activeCartId) {
         const newCart = await createShopifyCart(variantId, 1, sellingPlanId);
+
         setCartId(newCart.id);
         localStorage.setItem("cart_id", newCart.id);
 
-        // Get new cart line items
-        const newCartData = await getLiveCart(newCart.id);
-        setCartData(newCartData);
         return;
       } else {
         //Add item to existing cart
@@ -105,7 +109,7 @@ export default function CartContextProvider({ children }: {children: ReactNode})
     const newQuantity = action === "increase" ? currentQuantity + 1 : currentQuantity - 1;
 
     if(newQuantity <= 0) {
-      removeItem(lineId);
+      await removeItem(lineId);
       return;
     };
 

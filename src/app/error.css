@@ -1,33 +1,74 @@
-#not-found-wrapper {
+/*********
+  Not Found, 
+  Error Page, 
+  & Gloabl Error page
+**********/
+#not-found-wrapper,
+#error-page-wrapper,
+#global-error-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  text-align: center;
   height: 100svh;
-  gap: 2rem;
-  padding: 0 4rem;
+  gap: 1rem;
 }
 
-#not-found-wrapper h1 {
-  font-size: 5rem;
+#not-found-wrapper > h1,
+#error-page-wrapper > h1,
+#global-error-wrapper > h1 {
   display: flex;
   text-align: center;
+  line-height: 4rem;
+  text-transform: uppercase;
+  font-size: 5rem;
   margin: 0;
-  line-height: 5rem;
 }
 
-#not-found-wrapper p {
-  font-size: 1.25rem;
-  text-align: center;
+#not-found-wrapper > p,
+#global-error-wrapper > p {
+  max-width: 325px;
+  margin-bottom: 3em;
 }
 
-.error-btn {
+.return-to-site-btn, 
+.error-page-btn,
+.global-error-btn {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #141414;
+  color: #ededed;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 1em 2em;
   height: 50px;
   width: 200px;
-  border-radius: 4px;
-  background-color: #171717;
-  color: #ededed;
+}
+
+.return-to-site-btn:hover,
+.return-to-site-btn:active,
+.error-page-btn:hover,
+.error-page-btn:active,
+.global-error-btn:hover,
+.global-error-btn:active {
+  background-color: rgb(237, 237, 237, .75);
+  color: #000000;
+  border: 1px solid #000000;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 680px) {
+  #not-found-wrapper > h1,
+  #error-page-wrapper > h1,
+  #global-error-wrapper > h1 {
+    font-size: 5rem;
+  }
+
+  #not-found-wrapper > p,
+  #gloabl-error-wrapper > p {
+    font-size: 1.25rem;
+    max-width: 500px;
+  }
 }

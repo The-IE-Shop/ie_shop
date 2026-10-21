@@ -22,14 +22,14 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
           <section 
             id="global-error-wrapper" 
             className="wrapper"
-            aria-live="assertive"
           >
             <h1>Sorry, something went wrong...</h1>
             <p>
               An unexpected error has occured in the site
             </p>
             <button 
-              className="gloabl-error-btn"
+              type="button"
+              className="global-error-btn"
               onClick={() => reset()}
               aria-label="Attempt to recover and reload the page"
             >

@@ -1,12 +1,11 @@
 "use client";
-import { useState, useEffect, use, act } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import { HiArrowLongLeft } from "react-icons/hi2";
-import { ShopifyProductType, ShopifyVariantType } from "@/types/shopifyTypes";
+import { ShopifyProductType } from "@/types/shopifyTypes";
 import { notFound } from "next/navigation";
-import { useCart } from "@/components/CartContext";
 import AddToCartButton from "@/components/AddToCartButton";
 import { formatPrice } from "@/lib/utils";
 
@@ -85,20 +84,24 @@ export default function ProductClient({ product }: ShopifyProductType) {
 
   // Create array of all images from product
   const variantImages = product.images.edges.map((image: SingleShopifyImageType, index: number) => {
+    const isSelected = index === imageIndex;
+
     return(
-      <div 
-        className="variant-image-container" 
+      <button 
+        className={`variant-image-container ${isSelected ? "active" : ""}`}
         key={index}
         onClick={() => setImageIndex(index)}
+        aria-label={`View product image ${index + 1}`}
+        aria-pressed={isSelected}
       >
         <Image 
           src={image.node.url}
-          alt={image.node.altText}
+          alt={image.node.altText || `Product thumbnail view ${index + 1}`}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="variant-images"
         />
-      </div>
+      </button>
     )
   });
 
@@ -134,16 +137,17 @@ export default function ProductClient({ product }: ShopifyProductType) {
         href={"/shop"}
         className="back-to-link"
       >
-        <HiArrowLongLeft className="back-to-icon"/>
+        <HiArrowLongLeft className="back-to-icon" aria-hidden="true"/>
         Back to shop
       </Link>
 
       <div className="product-container">
         <section className="product-info">
-          <div className="product-title">
-            <p>{title}</p>
-          </div>
+          <h2 className="product-title">
+            {title}
+          </h2>
           <div className="product-price">
+            <span className="sr-only">Price:</span>
             <p className="price-amount">{standardPrice ? formatPrice(Number(displayPriceAmount), standardPrice.currencyCode) : "$0.00"}</p>
           </div>
         </section>
@@ -159,9 +163,9 @@ export default function ProductClient({ product }: ShopifyProductType) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1600vw"
             />
           </div>
-          <div className="product-variant-image-grid">
+          <nav className="product-variant-image-grid" aria-label="Product thumbnail gallery">
             {variantImages}
-          </div>
+          </nav>
         </div>
         <div className="product-page-btns">
           {hasMultipleSizes && <div className="sizes-container">
@@ -181,12 +185,12 @@ export default function ProductClient({ product }: ShopifyProductType) {
               </option>
               {selectSizes}
             </select>
-            <IoMdArrowDropdown className="drop-arrow"/>
+            <IoMdArrowDropdown className="drop-arrow" aria-hidden="true"/>
           </div>}
 
           {isOutOfStock && isSizeSelected && standardPrice && sellingPlans.length > 0 && (
-            <div className="payment-options-selector">
-              <p style={{ fontWeight: "600", fontSize: "0.9rem", textTransform: "uppercase" }}>
+            <fieldset className="payment-options-selector">
+              <p role="legend" style={{ fontWeight: "600", fontSize: "0.9rem", textTransform: "uppercase" }}>
                 Select Purchase Options:
               </p>
 
@@ -199,8 +203,7 @@ export default function ProductClient({ product }: ShopifyProductType) {
                   depositPrice || discountPrice || standardPrice.amount || "0";
                   
                 return(
-                  <label 
-                    htmlFor="" 
+                  <label
                     key={plan.id} 
                     className="payment-choice"
                   >
@@ -219,15 +222,19 @@ export default function ProductClient({ product }: ShopifyProductType) {
                         {`${plan.name}:`}
                         {discountPrice && 
                           <span style={{ textDecoration: "line-through", opacity: ".5", fontWeight: "normal" }}>
+                          <span className="sr-only">Original price:</span>
                           {formatPrice(Number(standardPrice?.amount), standardPrice.currencyCode)}</span>
                         } 
-                        <span>{formatPrice(Number(planPrice), standardPrice.currencyCode)}</span>
+                        <span>
+                          <span className="sr-only">Plan price:</span>
+                          {formatPrice(Number(planPrice), standardPrice.currencyCode)}
+                        </span>
                       </span>
 
                       {/* Discount percent */}
                       {discountPrice && 
                         <span style={{ height: "1rem", fontSize: ".75rem", fontWeight: "bold", color: "#d97706"}}>
-                          {`Save ${Number(standardPrice?.amount) / (Number(standardPrice?.amount) - Number(discountPrice))}%`}
+                          {`Save ${Math.round((1 - (Number(discountPrice) / Number(standardPrice?.amount))) * 100)}%`}
                         </span>
                       }
 
@@ -241,11 +248,11 @@ export default function ProductClient({ product }: ShopifyProductType) {
                   </label>
                 )
               })}
-            </div>
+            </fieldset>
           )}
           
           {isOutOfStock && selectedSellingPlanId && (
-            <p className="preorder-message">
+            <p className="preorder-message" role="status" aria-live="polite">
               ✦ {activeSellingPlans?.sellingPlan?.description || "Item available via pre-order."}
             </p>
           )}
@@ -254,19 +261,25 @@ export default function ProductClient({ product }: ShopifyProductType) {
             variantId={isSizeSelected ? currentActiveVariant?.node?.id : undefined}
             disabled={(hasMultipleSizes && !selectedSize) || (isOutOfStock && !selectedSellingPlanId)}
             sellingPlanId={selectedSellingPlanId || undefined}
+            isOutOfStock={isOutOfStock}
           />
 
-          
           <div className="product-description-container">
-            <div 
+            <button 
+              type="button"
               className="product-description-title"
               onClick={() => setIsTabOpen((prev) => !prev)}
+              aria-expanded={isTabOpen}
+              aria-controls="product-description-panel"
             >
               <h3 className="product-description-header">Description</h3>
-              {isTabOpen ? <IoMdArrowDropup className="accordian-drop-arrow"/> : <IoMdArrowDropdown className="accordian-drop-arrow"/>}
-            </div>
+              {isTabOpen ? <IoMdArrowDropup className="accordian-drop-arrow" aria-hidden="true"/> : <IoMdArrowDropdown className="accordian-drop-arrow" aria-hidden="true"/>}
+            </button>
             <div 
-              className={`product-description ${!isTabOpen && "close"}`}
+              id="product-description-panel"
+              className={`product-description ${!isTabOpen ? "close" : ""}`}
+              role="region"
+              aria-hidden={!isTabOpen}
               dangerouslySetInnerHTML={{__html: description}}
             >
             </div>

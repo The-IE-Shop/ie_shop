@@ -6,9 +6,10 @@ type AddToCartProps = {
   variantId: string | undefined;
   disabled?: boolean;
   sellingPlanId?: string;
+  isOutOfStock?: boolean;
 };
 
-export default function AddToCartButton({ variantId, disabled, sellingPlanId}: AddToCartProps) {
+export default function AddToCartButton({ variantId, disabled, sellingPlanId, isOutOfStock}: AddToCartProps) {
   const {setIsCartOpen, addItem, loading} = useCart();
   const [isAdding, setIsAdding] = useState(false);
   const [success, setSucces] = useState(false);
@@ -38,7 +39,8 @@ export default function AddToCartButton({ variantId, disabled, sellingPlanId}: A
   const getButtonText = () => {
     if(isAdding) return "Adding...";
     if(success) return isPreOrder ? "✓ Added to Cart" : "✓ Added!";
-    if(disabled && !variantId || !sellingPlanId) return "Select Option";
+    if(disabled && !variantId) return "Select Option";
+    if(disabled && isOutOfStock && !sellingPlanId) return "Select Option";
     if(disabled) return "Out of Stock";
     return isPreOrder ? "Pre-Order Now" : "Add to Cart";
   };
@@ -48,6 +50,7 @@ export default function AddToCartButton({ variantId, disabled, sellingPlanId}: A
       className={`add-to-cart ${success ? "bg-green-600" : ""}`}
       onClick={handleAddToCartClick}
       disabled={isAdding || disabled || !variantId}
+      aria-live="polite"
     >
       {getButtonText()}
     </button>

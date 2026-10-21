@@ -25,7 +25,7 @@ export default async function Footer(): Promise<React.JSX.Element> {
             />
         </Link>
         
-        <div className="policy-links-container">
+        <nav className="policy-links-container" aria-label="Footer corporate policies and utility links">
           <Link
             href="/about-us"
             className="policy-links"
@@ -59,14 +59,19 @@ export default async function Footer(): Promise<React.JSX.Element> {
             >
             Shippping Policy
           </Link>}
-        </div>
+        </nav>
         <div className="footer-info">
           <p>© 2026 IE Shop.</p>
 
 
           <div className="social-media-container">
-            <a href="https://www.instagram.com/theie.shop" target="_blank" rel="noopener noreferrer">
-              <FaInstagram className="social-media-icon" />
+            <a 
+              href="https://www.instagram.com/theie.shop" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              aria-label="Visit our Instagram page (opens in a new window tab)"
+            >
+              <FaInstagram className="social-media-icon" aria-hidden="true" />
             </a>
           </div>
         </div>

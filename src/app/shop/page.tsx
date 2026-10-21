@@ -35,41 +35,44 @@ export default async function ShopPage() {
     });
     
     return(
-      <div
+      <article
         className="shop-hat-container" 
         key={hat.node.id}
       >
         <Link
           href={`shop/${productLink}`}
-          className="shop-hat-image-container"
+          className="shop-hat-card-link"
+          aria-label={`${title} - ${formatPrice(price?.amount, price?.currencyCode)}${isPreOrderProduct ? ", Available for Pre-Order:" : ""}`}
         >
-          {
-            isPreOrderProduct && (
-              <div style={{ position: 'absolute', top: '8px', left: '8px', backgroundColor: '#d97706', color: '#fff', padding: '4px 8px', fontSize: '11px', fontWeight: 'bold', zIndex: 9, borderRadius: '4px' }}>
+          <div className="shop-hat-image-container">
+            {isPreOrderProduct && (
+              <span 
+                role="status"
+                style={{ position: 'absolute', top: '8px', left: '8px', backgroundColor: '#d97706', color: '#fff', padding: '4px 8px', fontSize: '11px', fontWeight: 'bold', zIndex: 9, borderRadius: '4px' }}
+              >
                 Pre-Order
-              </div>
-            )
-          }
-          <Image
-            src={images.url}
-            alt={images.altText}
-            className="shop-hat-images"
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1600px"
-          />
+              </span>
+            )}
+
+            <Image
+              src={images.url}
+              alt={images.altText}
+              className="shop-hat-images"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1600px"
+            />
+          </div>
+
+          <div className="shop-hat-info" aria-hidden="true">
+            <span className="shop-hat-title">
+              {title}
+            </span>
+            <span className="shop-hat-price">
+              {formatPrice(price.amount, price.currencyCode)}
+            </span>
+          </div>
         </Link>
-        <Link 
-          href={`shop/${productLink}`}
-          className="shop-hat-info"
-        >
-          <span className="shop-hat-title">
-            {title}
-          </span>
-          <span className="shop-hat-price">
-            {formatPrice(price.amount, price.currencyCode)}
-          </span>
-        </Link>
-      </div>
+      </article>
     )
   });
 
@@ -78,8 +81,8 @@ export default async function ShopPage() {
       <div className="shop-banner">
         <BannerCarousel autoSlide={10000}/>
       </div>
-      <section className="shop-hat-section">
-        <h3 className="shop-headline">
+      <section className="shop-hat-section" aria-labelledby="shop-heading">
+        <h3 id="shop-heading" className="shop-headline">
           Place your Pre-Order now
         </h3>
         <div className="shop-hat-grid-container">

@@ -392,6 +392,12 @@ main.main-hero-content {
   display: none;
 }
 
+.carousel-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
 /* The horizontal track sliding left and right */
 .carousel-track {
   display: flex;
@@ -462,9 +468,38 @@ main.main-hero-content {
   position: relative;
   display: flex;
   width: 100%;
-  height: 100%;
+  min-height: fit-content;
   flex-direction: column;
   gap: 1rem;
+}
+
+.shop-hat-card-link {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: fit-content;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.shop-hat-image-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  gap: 1rem;
+  border-radius: 4px;
+}
+
+.shop-hat-images {
+  position: relative !important;
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1/1;
+  border: 1px solid rgba(0, 0, 0, .125);
+  border-radius: 4px;
 }
 
 .shop-hat-info {
@@ -472,6 +507,7 @@ main.main-hero-content {
   flex-direction: column;
   font-size: 1rem;
   padding: 0 .5rem;
+  height: fit-content;
 }
 
 .shop-hat-title {
@@ -481,23 +517,6 @@ main.main-hero-content {
 .shop-hat-price {
   color: rgba(0, 0, 0, .5);
   font-size: .875rem;
-}
-
-.shop-hat-image-container {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  flex-grow: 1;
-  border: 1px solid rgba(0, 0, 0, .125);
-  border-radius: 4px;
-}
-
-.shop-hat-images {
-  position: relative;
-  object-fit: cover;
-  object-position: center;
-  width: 100%;
-  height: 100%;
 }
 
 @media screen and (min-width: 768px) {
@@ -583,7 +602,7 @@ main.main-hero-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3rem;
+  gap: 2rem;
   min-height: 100svh;
   width: 100%;
   padding: 2rem 0;
@@ -655,6 +674,7 @@ main.main-hero-content {
   font-size: 1.75rem;
   font-weight: 600;
   line-height: 2rem;
+  margin: 0;
 }
 
 .product-price {
@@ -759,6 +779,7 @@ main.main-hero-content {
   aspect-ratio: 6/1;
   background-color: #ededed;
   padding: 0 1rem;
+  cursor: pointer;
 }
 
 .product-description-header {
@@ -812,12 +833,14 @@ main.main-hero-content {
   display: flex;
   gap: .5rem;
   height: fit-content;
+  cursor: pointer;
 }
 
 .payment-choice > input {
   height: 1rem;
   width: 5%;
   padding: 0;
+  cursor: pointer;
 }
 
 .payment-choice > span {
