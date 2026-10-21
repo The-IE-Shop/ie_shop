@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useContext, createContext, ReactNode } from "react";
+import { useState, useEffect, useContext, createContext, ReactNode, RefObject } from "react";
 import { createShopifyCart, addToShopifyCart, 
   getLiveCart, removeFromShopifyCart, updateCartQuantity
 } from "@/lib/shopifyFetch";
@@ -14,6 +14,8 @@ type CartContextType = {
   addItem: (variantId: string, sellingPlanId?: string) => Promise<void>;
   removeItem: (lineId: string) => Promise<void>;
   updateQuantity: (lineId: string, currentQuantity: number, action: "increase" | "decrease") => Promise<void>;
+  returnFocusRef: RefObject<HTMLButtonElement | null> | null;
+  setReturnFocusRef: React.Dispatch<React.SetStateAction<RefObject<HTMLButtonElement | null> | null>>;
 }
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -23,6 +25,7 @@ export default function CartContextProvider({ children }: {children: ReactNode})
   const [cartId, setCartId] = useState<string | null>(null);
   const [cartData, setCartData] = useState<LiveCartResponseType | null>(null)
   const [loading, setLoading] = useState(false);
+  const [returnFocusRef, setReturnFocusRef] = useState<RefObject<HTMLButtonElement | null> | null>(null);
 
   // Check localStorage for active session
   useEffect(() => {
@@ -126,7 +129,18 @@ export default function CartContextProvider({ children }: {children: ReactNode})
   }
 
   return(
-    <CartContext.Provider value={{ isCartOpen, setIsCartOpen, cartId, cartData, loading, addItem, removeItem, updateQuantity }}>
+    <CartContext.Provider value={{ 
+      isCartOpen, 
+      setIsCartOpen, 
+      cartId, 
+      cartData, 
+      loading, 
+      addItem, 
+      removeItem, 
+      updateQuantity, 
+      returnFocusRef, 
+      setReturnFocusRef }}
+    >
       {children}
     </CartContext.Provider>
   )

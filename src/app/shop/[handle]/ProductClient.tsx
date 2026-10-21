@@ -168,25 +168,37 @@ export default function ProductClient({ product }: ShopifyProductType) {
           </nav>
         </div>
         <div className="product-page-btns">
-          {hasMultipleSizes && <div className="sizes-container">
-            <label htmlFor="select-sizes" className="sr-only">Select a size:</label>
-            <select
-              name="select-sizes"
-              id="select-sizes" 
-              className="sizes-dropdown"
-              value={selectedSize}
-              onChange={(e) => setSelectedSize(e.target.value)}
-            >
-              <option
-                value=""
-                disabled
+          {hasMultipleSizes && 
+            <div className="sizes-container">
+              <label htmlFor="select-sizes" className="sr-only">Select a size:</label>
+              <select
+                name="select-sizes"
+                id="select-sizes" 
+                className="sizes-dropdown"
+                value={selectedSize}
+                onChange={(e) => setSelectedSize(e.target.value)}
+                onKeyDown={(e) => {
+                  if(e.key === "Enter") {
+                    e.preventDefault();
+                    try {
+                      e.currentTarget.showPicker();
+                    } catch(err) {
+                      e.currentTarget.dispatchEvent(new KeyboardEvent("keydown", {key: ' '}))
+                    }
+                  }
+                }}
               >
-                Select a size: 
-              </option>
-              {selectSizes}
-            </select>
-            <IoMdArrowDropdown className="drop-arrow" aria-hidden="true"/>
-          </div>}
+                <option
+                  value=""
+                  disabled
+                >
+                  Select a size: 
+                </option>
+                {selectSizes}
+              </select>
+              <IoMdArrowDropdown className="drop-arrow" aria-hidden="true"/>
+            </div>
+          }
 
           {isOutOfStock && isSizeSelected && standardPrice && sellingPlans.length > 0 && (
             <fieldset className="payment-options-selector">

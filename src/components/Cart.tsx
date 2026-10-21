@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getLiveCart } from "@/lib/shopifyFetch";
 import { useCart } from "./CartContext";
 import { LiveCartResponseType } from "@/types/shopifyTypes";
@@ -10,7 +10,9 @@ import { formatPrice } from "@/lib/utils";
 
 
 export default function Cart({liveCartId, isOpen, setIsOpen}: {liveCartId: string | null; isOpen: boolean; setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;}) {
-  const {cartData, loading, removeItem, updateQuantity} = useCart();
+  const {cartData, loading, removeItem, updateQuantity, returnFocusRef, setReturnFocusRef} = useCart();
+
+  const cartContainerRef = useRef<HTMLDivElement>(null);
 
   const allCartItems = cartData?.lines?.edges || [];
 
@@ -18,20 +20,45 @@ export default function Cart({liveCartId, isOpen, setIsOpen}: {liveCartId: strin
     if(isOpen) {
       document.getElementById("exit-cart")?.focus();
       document.body.style.overflow = "hidden";
+
+      const timer = setTimeout(() => {
+        document.getElementById("exit-cart")?.focus();
+      }, 50);
+
+      return () => clearTimeout(timer);
     } else {
       document.body.style.overflow = "";
+      
+      if(returnFocusRef?.current) {
+        returnFocusRef.current.focus();
+        setReturnFocusRef(null);
+      }
     }
 
     return () => {
       document.body.style.overflow = "";
     };
-  }, [isOpen]);
+  }, [isOpen, returnFocusRef, setReturnFocusRef]);
 
   useEffect(() => {
     if(isOpen && allCartItems.length === 0) {
       document.getElementById("exit-cart")?.focus();
     }
   }, [allCartItems.length, isOpen]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if(!isOpen) return;
+
+      if(e.key === "Escape") {
+        setIsOpen(false);
+        return;
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return() => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, setIsOpen])
   
   const displayItems = allCartItems?.map((item) => {
     const node = item?.node;
@@ -111,6 +138,7 @@ export default function Cart({liveCartId, isOpen, setIsOpen}: {liveCartId: strin
 
   return(
     <div 
+      ref={cartContainerRef}
       className={`cart ${isOpen ? "active" : ""}`}
       role="dialog"
       aria-modal="true"
@@ -146,7 +174,6 @@ export default function Cart({liveCartId, isOpen, setIsOpen}: {liveCartId: strin
           <div className="subtotal-container">
             <h4 className="subtotal-header">Subtotal:</h4>
             <p className="subtotal">{subtotal ? formatPrice(subtotal.amount, subtotal.currencyCode): "$0.00"}</p>
-            {/* <span className="currency-code">{subtotal?.currencyCode}</span> */}
           </div>
           <Link 
             href={`${cartData.checkoutUrl}&channel=headless-storefronts`}
