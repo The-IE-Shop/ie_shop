@@ -7,10 +7,10 @@ export default function AboutUs() {
   return(
     <section id="about-us-section">
       <h2 className="mobile-about-title">
-        THE OFFICIAL MARK OF THE  INLAND EMPIRE
+        THE OFFICIAL MARK OF THE INLAND EMPIRE
       </h2>
       <h2 className="desktop-about-title">
-        THE OFFICIAL MARK OF <br/>THE  INLAND EMPIRE
+        THE OFFICIAL MARK OF <br/> THE  INLAND EMPIRE
       </h2>
       <article className="about-us">
         <p>We present to you the Official Mark of the Inland Empire.</p>

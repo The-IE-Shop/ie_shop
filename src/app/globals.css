@@ -68,7 +68,6 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: .5rem;
-  margin-top: 2rem;
   width: 100%;
 }
 
@@ -576,6 +575,7 @@ main.main-hero-content {
   align-items: center;
   height: fit-content;
   width: 100dvw;
+  padding-block: 2rem;
 }
 
 .product-container {
@@ -583,7 +583,7 @@ main.main-hero-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 3rem;
   min-height: 100svh;
   width: 100%;
   padding: 2rem 0;
@@ -673,7 +673,7 @@ main.main-hero-content {
   width: 100svw;
   gap: 1rem;
   order: 3;
-  margin: 2rem 0;
+  /* margin: 2rem 0; */
   padding: 0 1rem;
 }
 
@@ -827,8 +827,8 @@ main.main-hero-content {
 
 
 @media screen and (min-width: 768px) {
-  .product-container {
-    gap: 2rem;
+  #main-product-content {
+    padding-block: 3rem;
   }
 
   .product-content-card-container {
@@ -942,9 +942,8 @@ main.main-hero-content {
   height: 100%;
   background-color: #ededed;
   z-index: 100;
-  padding: 1em;
+  padding: 1rem;
   overflow-y: scroll;
-  
   transform: translateX(-100svw);
   opacity: 0;
   visibility: hidden;
@@ -964,8 +963,8 @@ main.main-hero-content {
   text-align: right;
   padding: .5rem;
   line-height: 0rem;
-  top: 0;
-  right: 0;
+  top: 1rem;
+  right: 1rem;
 }
 
 #exit-cart {
@@ -980,7 +979,7 @@ main.main-hero-content {
 
 .cart-header {
   position: relative;
-  margin-top: 1rem;
+  margin-top: 3rem;
 }
 
 .cart-items-container {
