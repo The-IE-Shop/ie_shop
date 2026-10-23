@@ -114,8 +114,10 @@ export default function ProductClient({ product }: ShopifyProductType) {
   const standardPrice = currentActiveVariant?.node?.price;
   const sellingPlans = currentActiveVariant?.node?.sellingPlanAllocations?.nodes || [];
   const activeSellingPlans = sellingPlans.find((a) => a.sellingPlan.id === selectedSellingPlanId);
-  const shippingMessage = currentActiveVariant?.node?.shippingMessage?.value;
-
+  const variantShippingMessage = currentActiveVariant?.node?.shippingMessage?.value;
+  const productShippingMessage = product?.shippingMessage?.value;
+  const shippingMessage = variantShippingMessage ?? productShippingMessage ?? "";
+  
   let displayPriceAmount = standardPrice?.amount || "0";
 
   if (activeSellingPlans) {
@@ -276,7 +278,7 @@ export default function ProductClient({ product }: ShopifyProductType) {
             </p>
           )}
           
-          {shippingMessage && isOutOfStock && selectedSellingPlanId && (
+          {!!shippingMessage && isOutOfStock && selectedSellingPlanId && (
             <p className="shipping-message" role="status" aria-live="polite">
               {shippingMessage}
             </p>

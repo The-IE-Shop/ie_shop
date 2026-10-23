@@ -1,5 +1,3 @@
-
-
 export type ShopifySeoType = {
   title: string | null;
   description: string | null;
@@ -8,6 +6,11 @@ export type ShopifySeoType = {
 export type ShopifyImageType = {
   url: string;
   altText: string;
+};
+
+export type ShopifyMetafieldType = {
+  type: string;
+  value: string;
 };
 
 export type ShopifyVariantType = {
@@ -56,6 +59,7 @@ export type ShopifyProductFieldsType = {
   description: string;
   descriptionHtml: string;
   seo: ShopifySeoType;
+  shippingMessage?: ShopifyMetafieldType | null;
   options: Array<{
     name: string;
     values: string[];

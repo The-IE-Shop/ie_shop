@@ -32,6 +32,13 @@ export const GET_PRODUCT_QUERY = `
         title
         description
       }
+      shippingMessage: metafield(
+        namespace: "custom"
+        key: "preorder_shipping_message"
+      ) {
+        type
+        value
+      }
       variants(first: 100) {
         edges {
           node {
