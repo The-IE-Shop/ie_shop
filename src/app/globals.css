@@ -755,11 +755,18 @@ main.main-hero-content {
   z-index: -1;
 }
 
-.preorder-message {
-  color: #d97706;
+.shipping-message, .preorder-message {
   font-size: 0.825rem;
   font-weight: 500;
   width: 100%;
+}
+
+.preorder-message {
+  color: #d97706;
+}
+
+.shipping-message {
+  opacity: .75;
 }
 
 .product-description-container {
@@ -886,6 +893,7 @@ main.main-hero-content {
     width: 100%;
     left: 0;
     border-radius: 4px;
+    order: 6;
   }
 
   .product-description-title {
@@ -894,15 +902,19 @@ main.main-hero-content {
   }
 
   .sizes-container {
-    order: 3;
+    order: 4;
   } 
   
   .add-to-cart {
-    order: 4;
+    order: 5;
   }
 
   .preorder-message {
     order: 2;
+  }
+
+  .shipping-message {
+    order: 3;
   }
 
   .payment-options-selector {

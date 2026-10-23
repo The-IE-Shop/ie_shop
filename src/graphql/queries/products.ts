@@ -3,6 +3,7 @@ export const GET_PRODUCT_QUERY = `
     product(handle: $handle) {
       id
       title
+      handle
       description
       descriptionHtml
       options {
@@ -41,6 +42,13 @@ export const GET_PRODUCT_QUERY = `
             price { 
               amount 
               currencyCode 
+            }
+            shippingMessage: metafield(
+              namespace: "custom"
+              key: "preorder_shipping_message"
+            ) {
+              type
+              value
             }
             sellingPlanAllocations(first: 5) {
               nodes {
