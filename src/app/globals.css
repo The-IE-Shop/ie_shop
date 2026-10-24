@@ -1601,21 +1601,12 @@ footer p {
   height: 300px;
   width: 100svw;
   position: relative;
-  background-color: #000000;
 }
 
 .about-us-logo-image {
   object-fit: contain;
   object-position: center;
   height: 80%;
-}
-
-.white {
-  display: flex;
-}
-
-.black {
-  display: none;
 }
 
 @media screen and (min-width: 768px) {
@@ -1640,14 +1631,6 @@ footer p {
     width: 42.5%;
     left: 0;
     background-color: transparent;
-  }
-
-  .white {
-    display: none;
-  }
-
-  .black {
-    display: flex;
   }
 }
 

@@ -65,15 +65,7 @@ export default function AboutUs() {
           Keep It IE.
         </p>
       </article>
-      <div className="about-us-logo-container white">
-        <Image
-          className="about-us-logo-image"
-          src={whiteLogo}
-          alt="IE Logo"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1600px"
-        />
-      </div>
-      <div className="about-us-logo-container black">
+      <div className="about-us-logo-container">
         <Image
           className="about-us-logo-image"
           src={blackLogo}

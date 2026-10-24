@@ -104,6 +104,7 @@ export default function ProductClient({ product }: ShopifyProductType) {
           src={image.node.url}
           alt={image.node.altText || `Product thumbnail view ${index + 1}`}
           fill
+          loading="eager"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="variant-images"
         />
