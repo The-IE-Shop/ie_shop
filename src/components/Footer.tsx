@@ -3,14 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaInstagram } from 'react-icons/fa';
 import { getShopLayoutData } from '@/lib/shopifyFetch';
-import type { ShopifyLayoutFieldsType } from '@/types/shopifyTypes';
-
-type FooterProps = {
-  shopData?: ShopifyLayoutFieldsType | null;
-};
 
 export default async function Footer(): Promise<React.JSX.Element> { 
   const shopData = await getShopLayoutData();
+  const currentYear = new Date().getFullYear();
 
   return(
     <footer>
@@ -25,43 +21,58 @@ export default async function Footer(): Promise<React.JSX.Element> {
             />
         </Link>
         
-        <nav className="policy-links-container" aria-label="Footer corporate policies and utility links">
+        <nav className="site-links-container" aria-label="Footer corporate policies and utility links">
+          <Link
+            href="/shop"
+            className="site-links"
+          >
+            Shop
+          </Link>
+
+          <Link
+            href="/contact"
+            className="site-links"
+          >
+            Contact
+          </Link>
+
           <Link
             href="/about-us"
-            className="policy-links"
+            className="site-links"
           >
             About Us
           </Link>
+
           {shopData?.privacyPolicy && <Link
-            className='policy-links' 
+            className="site-links" 
             href="/policies/privacy-policy"
             >
             Privacy Policy
           </Link>}
 
           {shopData?.termsOfService && <Link
-            className='policy-links' 
+            className="site-links" 
             href="/policies/terms-of-service"
             >
             Terms of Service
           </Link>}
 
           {shopData?.refundPolicy && <Link
-            className='policy-links' 
+            className="site-links" 
             href="/policies/refund-policy"
             >
             Refund Policy
           </Link>}
 
           {shopData?.shippingPolicy && <Link
-            className='policy-links' 
+            className="site-links" 
             href="/policies/shipping-policy"
             >
-            Shippping Policy
+            Shipping Policy
           </Link>}
         </nav>
         <div className="footer-info">
-          <p>© 2026 IE Shop.</p>
+          <p>© {currentYear} IE Shop.</p>
 
 
           <div className="social-media-container">

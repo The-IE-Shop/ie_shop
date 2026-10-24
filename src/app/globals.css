@@ -1470,7 +1470,7 @@ footer {
   width: 100%;
 }
 
-footer p, .policy-links {
+footer p, .site-links {
   font-size: .675rem;
 }
 
@@ -1479,7 +1479,7 @@ footer p {
   min-width: fit-content;
 }
 
-.policy-links-container {
+.site-links-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -1510,7 +1510,7 @@ footer p {
     gap: 1.5rem;
   }
 
-  footer p, .policy-links {
+  footer p, .site-links {
     font-size: 1rem;
   }
 
