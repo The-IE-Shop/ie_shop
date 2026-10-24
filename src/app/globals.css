@@ -1482,10 +1482,7 @@ footer p {
 .site-links-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   gap: 1rem;
-  width: fit-content;
-  max-width: 500px;
 }
 
 .footer-logo-image {
@@ -1508,6 +1505,10 @@ footer p {
 
   #footer-wrapper {
     gap: 1.5rem;
+  }
+
+  .site-links-container {
+    gap: 2rem;
   }
 
   footer p, .site-links {
