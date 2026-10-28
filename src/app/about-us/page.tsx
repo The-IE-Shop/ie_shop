@@ -16,14 +16,14 @@ export default function AboutUs() {
         <p>We present to you the Official Mark of the Inland Empire.</p>
 
         <p> 
-          This is not a clothing brand. It's a mark for the people of the IE 
-          to proudly represent where they're from and the place they call home.
+          This is not a clothing brand. It's a mark for the people of the 
+          IE to proudly display where they're from and call home.
         </p>
 
         <p> 
-          For generations, we've worn Dodgers, Angels, and Padres hats to represent 
-          our Southern California roots. We've worn the colors of our favorite teams 
-          to showcase where we come from, because we didn’t have a mark of our own.
+          For generations, we've worn Dodgers, Angels, and Padres hats to 
+          represent our Southern California roots because we didn’t have a 
+          mark of our own.
         </p>
 
         <p>
@@ -31,13 +31,7 @@ export default function AboutUs() {
         </p>
         
         <p>
-          This mark was created to give our region a symbol of its own. A mark 
-          that brings together the spirit, energy, and pride of the many cities 
-          and communities that make up The IE.
-        </p>
-
-        <p>
-          Wherever you reside within its boundaries, this is for you. 
+          Wherever you call home in the Inland Empire, this mark is yours. 
           (And yes, Pomona is the IE….argue with your mama)
         </p>
 
