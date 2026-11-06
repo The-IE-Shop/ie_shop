@@ -165,7 +165,7 @@ export default function ProductClient({ product }: ShopifyProductType) {
           <div className="product-image-container">
             <Image 
               src={mainProductImage.url}
-              alt={mainProductImage.altText}
+              alt={mainProductImage.altText || "Image of product"}
               className="product-main-image"
               fill
               priority={true}

@@ -56,7 +56,7 @@ export default async function ShopPage() {
 
             <Image
               src={images.url}
-              alt={images.altText}
+              alt={images.altText || "Image of hat"}
               className="shop-hat-images"
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1600px"
