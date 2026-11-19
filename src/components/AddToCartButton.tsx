@@ -1,15 +1,27 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useCart } from "./CartContext";
+import { trackEvent, extractShopifyId } from "@/lib/metaPixel";
 
 type AddToCartProps = {
   variantId: string | undefined;
   disabled?: boolean;
   sellingPlanId?: string;
   isOutOfStock?: boolean;
+  productTitle?: string;
+  price?: number;
+  currency?: string;
 };
 
-export default function AddToCartButton({ variantId, disabled, sellingPlanId, isOutOfStock}: AddToCartProps) {
+export default function AddToCartButton({ 
+  variantId, 
+  disabled, 
+  sellingPlanId, 
+  isOutOfStock,
+  productTitle,
+  price,
+  currency = "USD",
+}: AddToCartProps) {
   const {setIsCartOpen, addItem, loading} = useCart();
   const [isAdding, setIsAdding] = useState(false);
   const [success, setSucces] = useState(false);
@@ -22,6 +34,15 @@ export default function AddToCartButton({ variantId, disabled, sellingPlanId, is
     setIsAdding(true);
     try {
       await addItem(variantId, sellingPlanId);
+
+      trackEvent("AddToCart", {
+        content_name: productTitle || "Product",
+        content_ids: [extractShopifyId(variantId)],
+        content_type: "product",
+        value: price ?? 0,
+        currency: currency,
+      });
+      
       setSucces(true);
       setIsCartOpen(true);
       
