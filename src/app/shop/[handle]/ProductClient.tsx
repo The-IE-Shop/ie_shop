@@ -8,6 +8,7 @@ import { ShopifyProductType } from "@/types/shopifyTypes";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
 import { formatPrice } from "@/lib/utils";
+import { trackEvent, extractShopifyId } from "@/lib/metaPixel";
 
 type SingleShopifyImageType = {
   node: {
@@ -78,6 +79,22 @@ export default function ProductClient({ product }: ShopifyProductType) {
     ? !currentActiveVariant.node.availableForSale || (currentActiveVariant.node.quantityAvailable !== undefined && currentActiveVariant.node.quantityAvailable <= 0) 
     : false;
     
+
+  // MetaPixel ViewContent once when the product loads
+  useEffect(() => {
+    const defaultVariant = variantList[0]?.node;
+    if(!defaultVariant) return;
+
+    trackEvent("ViewContent", {
+      content_name: title,
+      content_ids: [extractShopifyId(defaultVariant.id)],
+      content_type: "product",
+      value: Number(defaultVariant.price.amount),
+      currency: defaultVariant.price.currencyCode || "USD",
+    });
+  }, [product.id]);
+
+
   // Create options for select size dropdown
   const selectSizes = variantList.map((variant: ProductVariantType, index: number) => {
     const option = variant?.node?.title;
@@ -127,6 +144,17 @@ export default function ProductClient({ product }: ShopifyProductType) {
       standardPrice?.amount || "0";
   };
 
+
+  // Calculate exact checkout charge for Meta Pixel AddtoCart track
+  const cartChargeAmount = activeSellingPlans
+    ? Number(
+      activeSellingPlans?.checkoutChargeAmount?.amount ||
+      activeSellingPlans?.priceAdjustments?.[0]?.price?.amount ||
+      standardPrice?.amount || 0
+    )
+    : Number(standardPrice?.amount || 0);
+
+
   useEffect(() => {
     if(isOutOfStock && sellingPlans.length > 0) {
       const planExists = sellingPlans.some((a) => a.sellingPlan.id === selectedSellingPlanId);
@@ -165,7 +193,7 @@ export default function ProductClient({ product }: ShopifyProductType) {
           <div className="product-image-container">
             <Image 
               src={mainProductImage.url}
-              alt={mainProductImage.altText || "Image of product"}
+              alt={mainProductImage.altText || "Product image"}
               className="product-main-image"
               fill
               priority={true}
@@ -290,6 +318,9 @@ export default function ProductClient({ product }: ShopifyProductType) {
             disabled={(hasMultipleSizes && !selectedSize) || (isOutOfStock && !selectedSellingPlanId)}
             sellingPlanId={selectedSellingPlanId || undefined}
             isOutOfStock={isOutOfStock}
+            productTitle={title}
+            price={cartChargeAmount}
+            currency={standardPrice?.currencyCode || "USD"}
           />
 
           <div className="product-description-container">

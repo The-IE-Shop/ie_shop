@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import type { RootLayoutProps } from "@/types/localTypes";
+import { Suspense } from "react";
 import "./globals.css";
 import "./error.css";
 import { Birthstone } from "next/font/google";
 import CartContextProvider from "@/components/CartContext";
+import MetaPixel from "@/components/MetaPixel";
 
 const birthstone = Birthstone ({
   weight: "400",
@@ -51,6 +53,9 @@ export default function RootLayout({
       className={`${birthstone.variable}`}
     >
       <body>
+        <Suspense fallback={null}>
+          <MetaPixel />
+        </Suspense>
         <CartContextProvider>
           {children}
         </CartContextProvider>
